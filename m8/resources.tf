@@ -1,15 +1,4 @@
-##################################################################################
-# CONFIGURATION (for Terraform > 0.12)
-##################################################################################
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 2.0"
 
-    }
-  }
-}
 ##################################################################################
 # PROVIDERS
 ##################################################################################
@@ -18,20 +7,6 @@ provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
   region     = var.region
-}
-
-provider "azurerm" {
-  subscription_id = var.arm_subscription_id
-  client_id       = var.arm_principal
-  client_secret   = var.arm_password
-  tenant_id       = var.tenant_id
-  alias           = "arm-1"
-  
-  #Added when using service principal with limited permissions
-  skip_provider_registration = true
-
-  #Required for version 2.0 of provider
-  features {}
 }
 
 ##################################################################################
@@ -248,7 +223,7 @@ EOF
 module "bucket" {
   name = local.s3_bucket_name
 
-  source      = ".\\Modules\\s3"
+  source      = "./Modules/s3"
   common_tags = local.common_tags
 }
 
@@ -264,16 +239,4 @@ resource "aws_s3_bucket_object" "graphic" {
   key    = "/website/Globo_logo_Vert.png"
   source = "./Globo_logo_Vert.png"
 
-}
-
-# Azure RM DNS #
-resource "azurerm_dns_cname_record" "elb" {
-  name                = "${local.env_name}-website"
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_resource_group
-  ttl                 = "30"
-  record              = aws_elb.web.dns_name
-  provider            = azurerm.arm-1
-
-  tags = merge(local.common_tags, { Name = "${local.env_name}-website" })
 }

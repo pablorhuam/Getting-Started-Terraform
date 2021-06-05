@@ -25,13 +25,6 @@ variable "instance_count" {
 variable "billing_code_tag" {}
 variable "bucket_name_prefix" {}
 
-variable "arm_subscription_id" {}
-variable "arm_principal" {}
-variable "arm_password" {}
-variable "tenant_id" {}
-variable "dns_zone_name" {}
-variable "dns_resource_group" {}
-
 ##################################################################################
 # LOCALS
 ##################################################################################
